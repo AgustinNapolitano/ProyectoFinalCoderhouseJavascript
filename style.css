@@ -1,0 +1,13 @@
+body{
+    background-color:azure;
+}
+
+.tituloContenedor{
+    display: flex;
+    justify-content: center;
+}
+
+.formContenedor{
+    display: flex;
+    justify-content: center;
+}
