@@ -87,34 +87,14 @@ añadirProductoCarrito();
 function añadirProductoCarrito() {
         let botones = document.getElementsByClassName("btnCompra");
         console.log(botones);
-
-
         for (const boton of botones) {
                 boton.addEventListener('click', function () {
-                        // let seleccion = carrito.find(productoTarjetasGraficas => Producto.id == this.id);
-                        // if (seleccion) {
-                        //         seleccion.addCantidad();
-
-                        // } else {
-                        //         seleccion = productos.find(productoTarjetasGraficas => Producto.id == this.id);
-                        //         carrito.push(seleccion);
-                        // }
-                        // localStorage.setItem('Carrito', JSON.stringify(carrito));
-                        // carritoHTML(carrito);
                         swal("Producto añadido al carrito.")
                 })
         }
 }
 
-// function carritoHTML(lista){
-//         cantidadCarrito.innerHTML = lista.length;
-//         productosCarrito.innerHTML = "";
-//         for (const producto of lista){
-//                 let prod = document.createElement('div');
-//                 prod.innerHTML= `${productoTarjetasGraficas.nombre}<span class="badge bg-warning text-dark"> Precio: $ ${productoTarjetasGraficas.precio}</span>
-//                 `
-//         }
-// }
+
 
 
 let productosFetch = document.querySelector("#productosFetch");
@@ -138,6 +118,8 @@ fetch("productos.json")
                 })
                 añadirProductoCarrito();
         })
+
+
 
 
 
