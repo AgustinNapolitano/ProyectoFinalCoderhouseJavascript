@@ -5,13 +5,16 @@ class Producto {
                 this.nombre = nombre;
                 this.precio = parseFloat(precio);
                 this.oferta = oferta;
-                this.cantidad = 0;
+                this.cantidad = cantidad || 1;
         }
         addCantidad() {
                 this.cantidad++;
         }
         ofertaLabel() {
                 return this.oferta == true ? "El protudcto está en oferta" : "";
+        }
+        subTotal(){
+                return this.precio * this.cantidad;
         }
 }
 
@@ -27,6 +30,7 @@ const productosCarrito = document.getElementById('productosCarrito')
 
 
 añadirProductoCarrito();
+seleccionarProducto();
 
 
 
@@ -77,16 +81,13 @@ miFormulario.onsubmit = (e) => {
 
 
 añadirProductoCarrito();
-
-
-
-
+seleccionarProducto();
 
 /* EVENTO + librería aplicada (sweetAlert) */
 
 function añadirProductoCarrito() {
-        let botones = document.getElementsByClassName("btnCompra");
-        console.log(botones);
+        let botones = document.getElementsByClassName('btnCompra');
+        //console.log(botones);
         for (const boton of botones) {
                 boton.addEventListener('click', function () {
                         swal("Producto añadido al carrito.")
@@ -94,33 +95,67 @@ function añadirProductoCarrito() {
         }
 }
 
-
-
-
 let productosFetch = document.querySelector("#productosFetch");
-fetch("productos.json")
-        .then((respuesta) => respuesta.json())
-        .then((data) => {
-                data.map((productoTarjetasGraficas) => {
-                        const content = document.createElement("div");
-                        content.classList.add('col');
-                        content.innerHTML = `
-                <div class="card" style="width: 18rem;">
-                        <img src="${productoTarjetasGraficas.imgUrl}" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                        <h5 class="card-title">${productoTarjetasGraficas.title}</h5>
-                                        <p class="card-text"> $ ${productoTarjetasGraficas.price}</p>
-                                        <button id='${productoTarjetasGraficas.id}' class = 'btnCompra btn btn-primary'>Comprar</button>                
-                                </div>
-                </div>
-                `;
-                        productosFetch.append(content);
+ fetch("productos.json")
+         .then((respuesta) => respuesta.json())
+         .then((data) => {
+                 data.map((productoTarjetasGraficas) => {
+                         const content = document.createElement("div");
+                         content.classList.add('col');
+                         content.innerHTML = `
+                 <div class="card" style="width: 18rem;">
+                         <img src="${productoTarjetasGraficas.imgUrl}" class="card-img-top" alt="...">
+                                 <div class="card-body">
+                                         <h5 class="card-title">${productoTarjetasGraficas.title}</h5>
+                                         <p class="card-text"> $ ${productoTarjetasGraficas.price}</p>
+                                         <button id='${productoTarjetasGraficas.id}' class = 'btnCompra btn btn-primary'>Comprar</button>                
+                                 </div>
+                 </div>
+                 `;
+                         productosFetch.append(content);
+
+                 })
+
+                 
+
+               
+                 añadirProductoCarrito();
+                 seleccionarProducto();
+         })
+
+
+function seleccionarProducto(){
+        let botones = document.getElementsByClassName('btnCompra');
+        for (const boton of botones) {
+                boton.addEventListener('click', function (){
+                        let seleccion = carrito.find(producto => producto.id == this.id);
+                        if(seleccion){
+                                seleccion.addCantidad();
+
+                        }else{
+                                seleccion = productos.find(producto=> producto.id == this.id);
+                                carrito.push(seleccion)
+                        }
+                        localStorage.setItem('Carrito', JSON.stringify(carrito));
+                        carritoHTML(carrito);
+                
                 })
-                añadirProductoCarrito();
-        })
 
+        }
+}
 
-
-
+function carritoHTML(lista) {
+        cantidadCarrito.innerHTML = lista.length;
+        productosCarrito.innerHTML="";
+        for (const producto of lista) {
+                let prod = document.createElement('div');
+                prod.innerHTML= ` ${producto.nombre}
+                <span class="badge bg-warning text-dark">Precio: $ ${producto.precio}</span>
+                <span class="badge bg-primary">Cantidad: ${producto.cantidad}</span>
+                <span class="badge bg-dark">Subtotal: $ ${producto.subTotal()}</span>
+                `;
+                productosCarrito.append(prod)
+        }
+}
 
 
